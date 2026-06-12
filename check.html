@@ -4,22 +4,44 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <h1>Library Load Test</h1>
-    <div id="result">Checking...</div>
+    <h2>Supabase Diagnostic</h2>
+    <div id="output"></div>
     
     <script>
+        const output = document.getElementById('output');
+        
+        // Test 1: Check if libraries loaded
         if (typeof window.supabase !== 'undefined') {
-            document.getElementById('result').innerHTML = '✅ Supabase library loaded successfully!';
+            output.innerHTML += '✅ Supabase library loaded<br>';
         } else {
-            document.getElementById('result').innerHTML = '❌ Supabase library NOT loaded. Check internet connection.';
+            output.innerHTML += '❌ Supabase library NOT loaded<br>';
         }
         
-        // Also try to create a client with fake credentials to see if it works
+        // 🔴 REPLACE THESE WITH YOUR ACTUAL CREDENTIALS 🔴
+        const SUPABASE_URL = 'https://your-project.supabase.co';
+        const SUPABASE_ANON_KEY = 'your-anon-key-here';
+        
+        output.innerHTML += `<br>Using URL: ${SUPABASE_URL}<br>`;
+        output.innerHTML += `Using Key: ${SUPABASE_ANON_KEY.substring(0, 20)}...<br><br>`;
+        
+        // Test 2: Try to create client
         try {
-            const testClient = window.supabase.createClient('https://test.com', 'test-key');
-            document.getElementById('result').innerHTML += '<br>✅ createClient() works!';
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            output.innerHTML += '✅ Client created successfully<br>';
+            
+            // Test 3: Try a simple anonymous request
+            supabase.auth.getSession().then(({ data, error }) => {
+                if (error) {
+                    output.innerHTML += '❌ Session error: ' + error.message + '<br>';
+                } else {
+                    output.innerHTML += '✅ Session check passed<br>';
+                }
+            }).catch(err => {
+                output.innerHTML += '❌ Session exception: ' + err.message + '<br>';
+            });
+            
         } catch(e) {
-            document.getElementById('result').innerHTML += '<br>❌ createClient() error: ' + e.message;
+            output.innerHTML += '❌ Client creation failed: ' + e.message + '<br>';
         }
     </script>
 </body>
