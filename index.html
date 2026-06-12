@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+      
+      <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -67,7 +68,6 @@
         .modal-content { background: #141832; border-radius: 20px; padding: 25px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
         .button-group { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
         
-        /* Login Container */
         .login-container { max-width: 500px; margin: 50px auto; background: #141832; border-radius: 30px; padding: 40px; text-align: center; }
         .login-container h2 { color: white; margin-bottom: 10px; }
         .login-container p { color: #8892b0; margin-bottom: 30px; }
@@ -75,7 +75,6 @@
         .login-toggle { margin-top: 20px; color: #8892b0; cursor: pointer; }
         .login-toggle span { color: #00d09c; text-decoration: underline; }
         
-        /* Calendar Styles */
         .calendar-container { background: #141832; border-radius: 20px; padding: 20px; border: 1px solid #1e2342; margin-top: 15px; }
         body.light .calendar-container { background: white; }
         .calendar-header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
@@ -133,68 +132,64 @@
 </head>
 <body>
     <div id="app">
-        <!-- Login Screen -->
         <div id="loginScreen" class="login-container">
-            <h2>ð Tuition Manager</h2>
+            <h2>📚 Tuition Manager</h2>
             <p>Sign in to access your data across all devices</p>
             <div id="loginMessage" class="success-msg" style="display:none; margin-bottom:15px;"></div>
             <input type="email" id="loginEmail" placeholder="Email" autocomplete="email">
             <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
-            <button onclick="handleLogin()" class="btn-primary" style="width:100%">Sign In</button>
-            <div class="login-toggle">Don't have an account? <span onclick="showSignup()">Create one</span></div>
+            <button onclick="window.handleLogin()" class="btn-primary" style="width:100%">Sign In</button>
+            <div class="login-toggle">Don't have an account? <span onclick="window.showSignup()">Create one</span></div>
         </div>
 
-        <!-- Main App (hidden until login) -->
         <div id="mainApp" style="display:none">
             <div class="dashboard">
                 <div class="header">
                     <div class="title-section">
-                        <h1>ð Tuition Manager</h1>
+                        <h1>📚 Tuition Manager</h1>
                         <p>Cloud Sync | Multi-User | Export/Import Backup</p>
                     </div>
                     <div class="controls">
-                        <button onclick="toggleTheme()">ð Dark/Light</button>
-                        <button onclick="openAddGroupModal()" class="btn-primary">â Add Family</button>
-                        <button onclick="openAddStudentModal()" class="btn-primary">ð¨âð Add Student</button>
-                        <button onclick="handleLogout()" class="btn-logout">ðª Logout</button>
+                        <button onclick="window.toggleTheme()">🌓 Dark/Light</button>
+                        <button onclick="window.openAddGroupModal()" class="btn-primary">➕ Add Family</button>
+                        <button onclick="window.openAddStudentModal()" class="btn-primary">👨‍🎓 Add Student</button>
+                        <button onclick="window.handleLogout()" class="btn-logout">🚪 Logout</button>
                     </div>
                 </div>
 
                 <div class="mode-selector">
-                    <div class="mode-btn active" data-mode="groups" onclick="switchMode('groups')">ð¥ Family</div>
-                    <div class="mode-btn" data-mode="students" onclick="switchMode('students')">ð¨âð Students</div>
-                    <div class="mode-btn" data-mode="lessons" onclick="switchMode('lessons')">ð Calendar</div>
-                    <div class="mode-btn" data-mode="payment" onclick="switchMode('payment')">ð° Payment Status</div>
-                    <div class="mode-btn" data-mode="analysis" onclick="switchMode('analysis')">ð Analysis</div>
-                    <div class="mode-btn" data-mode="invoice" onclick="switchMode('invoice')">ð§¾ Invoice</div>
-                    <div class="mode-btn" data-mode="backup" onclick="switchMode('backup')">ð¾ Backup</div>
+                    <div class="mode-btn active" data-mode="groups" onclick="window.switchMode('groups')">👥 Family</div>
+                    <div class="mode-btn" data-mode="students" onclick="window.switchMode('students')">👨‍🎓 Students</div>
+                    <div class="mode-btn" data-mode="lessons" onclick="window.switchMode('lessons')">📅 Calendar</div>
+                    <div class="mode-btn" data-mode="payment" onclick="window.switchMode('payment')">💰 Payment Status</div>
+                    <div class="mode-btn" data-mode="analysis" onclick="window.switchMode('analysis')">📊 Analysis</div>
+                    <div class="mode-btn" data-mode="invoice" onclick="window.switchMode('invoice')">🧾 Invoice</div>
+                    <div class="mode-btn" data-mode="backup" onclick="window.switchMode('backup')">💾 Backup</div>
                 </div>
 
-                <div id="groupsView"><div class="grid-2cols"><div class="card"><div class="card-title">â Add New Family</div><div id="groupFormMessage" class="success-msg"></div><div class="form-group"><label>Family Name *</label><input type="text" id="groupName" placeholder="e.g., Smith Family"></div><button onclick="addGroup()" class="btn-primary" style="width:100%">â¨ Create Family</button></div><div class="card"><div class="card-title">ð¥ All Families</div><div id="groupList" class="group-list"><div style="text-align:center;padding:40px;color:#8892b0">Loading...</div></div></div></div></div>
-                <div id="studentsView" style="display:none"><div class="grid-2cols"><div class="card"><div class="card-title">ð Add Student</div><div id="studentFormMessage" class="success-msg"></div><div class="form-group"><label>Student Name *</label><input type="text" id="studentName" placeholder="e.g., Emma Wong"></div><div class="form-group"><label>Select Family *</label><select id="studentGroup"><option value="">-- Select Family --</option></select></div><div class="form-group"><label>Rate Type *</label><div class="rate-group"><select id="rateType"><option value="hourly">ð° Per Hour</option><option value="session">ð Per Session</option></select><input type="number" id="rateAmount" placeholder="Amount ($)" step="0.01"></div></div><button onclick="addStudent()" class="btn-primary" style="width:100%">â¨ Add Student</button></div><div class="card"><div class="card-title">ð¨âð Student List</div><div id="studentList" class="student-list"><div style="text-align:center;padding:40px;color:#8892b0">Loading...</div></div></div></div></div>
-                <div id="lessonsView" style="display:none"><div class="grid-2cols"><div class="card"><div class="card-title">â Add Lesson</div><div id="lessonFormMessage" class="success-msg"></div><div class="form-group"><label>Select Student *</label><select id="lessonStudent"><option value="">-- Select Student --</option></select></div><div class="form-group"><label>Lesson Date & Time *</label><input type="datetime-local" id="lessonStart"><div class="auto-hint">â±ï¸ End time auto-sets to 1.5 hours later</div></div><div class="form-group"><label>End Time *</label><input type="datetime-local" id="lessonEnd"></div><div class="form-group"><label>Topic Covered</label><input type="text" id="lessonTopic" placeholder="e.g., Algebra"></div><div class="form-group"><label>Notes / Homework</label><textarea id="lessonNotes" rows="2" placeholder="Homework assigned"></textarea></div><button onclick="addLesson()" class="btn-primary" style="width:100%">â¨ Add Lesson</button></div><div class="card"><div class="card-title">ð Lesson History</div><div class="stats-bar"><div class="stat"><div class="stat-number" id="totalLessons">0</div><div class="stat-label">Total Lessons</div></div><div class="stat"><div class="stat-number" id="totalEarnings">$0</div><div class="stat-label">Total Earnings</div></div></div><div id="lessonList" class="lesson-list"><div style="text-align:center;padding:40px;color:#8892b0">Loading...</div></div></div></div></div>
-                <div id="paymentView" style="display:none"><div class="card"><div class="card-title">ð° Family Payment Status</div><div id="paymentFormMessage" class="success-msg"></div><div class="grid-2cols" style="margin-bottom:20px"><div class="form-group"><label>Select Family</label><select id="paymentGroupFilter" onchange="renderGroupPayment()"><option value="">-- Select Family --</option></select></div><div class="form-group"><label>Payment Status</label><select id="groupPaymentStatus"><option value="unpaid">â ï¸ Unpaid</option><option value="paid">â Paid</option><option value="invoiced">ð Invoiced</option></select></div></div><button onclick="updateGroupPaymentStatus()" class="btn-primary" style="width:100%;margin-bottom:20px">ð¾ Update Payment Status</button><div id="groupPaymentInfo" style="display:none"><div class="stats-bar"><div class="stat"><div class="stat-number" id="groupTotalLessons">0</div><div class="stat-label">Lessons</div></div><div class="stat"><div class="stat-number" id="groupTotalAmount">$0</div><div class="stat-label">Total Amount</div></div><div class="stat"><div class="stat-number" id="groupPaymentBadge"></div><div class="stat-label">Current Status</div></div></div></div><div id="groupPaymentList" class="lesson-list"><div style="text-align:center;padding:40px;color:#8892b0">Select a family to view payment status</div></div></div></div>
-                <div id="analysisView" style="display:none"><div class="card"><div class="card-title">ð Fee Analysis & Payment Report</div><div id="analysisFormMessage" class="success-msg"></div><div class="grid-2cols" style="margin-bottom:20px"><div class="form-group"><label>From Date *</label><input type="date" id="analysisFromDate"></div><div class="form-group"><label>To Date *</label><input type="date" id="analysisToDate"></div></div><div class="button-group"><button onclick="generateAnalysis()" class="btn-primary" style="flex:1">ð Generate Report</button><button id="shareAnalysisBtn" onclick="shareAnalysis()" class="btn-share" style="flex:1;display:none">ð¤ Share Report</button></div><div id="analysisPreview" style="display:none;margin-top:20px"></div></div></div>
-                <div id="invoiceView" style="display:none"><div class="card"><div class="card-title">ð§¾ Generate Invoice</div><div id="invoiceFormMessage" class="success-msg"></div><div class="grid-2cols" style="margin-bottom:20px"><div class="form-group"><label>Select Family *</label><select id="invoiceGroup"><option value="">-- Select Family --</option></select></div><div class="form-group"><label>From Date *</label><input type="date" id="invoiceFromDate"></div><div class="form-group"><label>To Date *</label><input type="date" id="invoiceToDate"></div></div><div class="button-group"><button onclick="generateInvoice()" class="btn-primary" style="flex:1">ð Generate Invoice</button><button id="shareBtn" onclick="shareInvoice()" class="btn-share" style="flex:1;display:none">ð¤ Share Invoice</button></div><div id="invoicePreview" style="display:none;margin-top:20px"></div></div></div>
-                <div id="backupView" style="display:none"><div class="card"><div class="card-title">ð¾ Backup & Restore Data</div><div id="backupFormMessage" class="success-msg"></div><div class="backup-info"><strong>ð Current Data Summary:</strong><br>Families: <span id="backupGroupCount">0</span><br>Students: <span id="backupStudentCount">0</span><br>Lessons: <span id="backupLessonCount">0</span></div><div class="success-box" style="margin-bottom:20px"><strong>ð¾ How to Backup:</strong><ul style="margin-top:10px;margin-left:20px"><li>Click <strong>"Export to File"</strong> to save your data as a JSON file</li><li>Save the file to your computer, iCloud Drive, Google Drive, or email it to yourself</li></ul></div><div class="success-box" style="margin-bottom:20px"><strong>ð How to Restore:</strong><ul style="margin-top:10px;margin-left:20px"><li>Click <strong>"Import from File"</strong> to select a previously saved backup file</li><li><strong>â ï¸ Warning:</strong> This will replace ALL current data</li></ul></div><div class="button-group"><button onclick="exportToFile()" class="btn-backup" style="flex:1">ð Export to File</button><button onclick="importFromFile()" class="btn-primary" style="flex:1">ð Import from File</button></div></div></div>
+                <div id="groupsView"><div class="grid-2cols"><div class="card"><div class="card-title">➕ Add New Family</div><div id="groupFormMessage" class="success-msg"></div><div class="form-group"><label>Family Name *</label><input type="text" id="groupName" placeholder="e.g., Smith Family"></div><button onclick="window.addGroup()" class="btn-primary" style="width:100%">✨ Create Family</button></div><div class="card"><div class="card-title">👥 All Families</div><div id="groupList" class="group-list"><div style="text-align:center;padding:40px;color:#8892b0">Loading...</div></div></div></div></div>
+                <div id="studentsView" style="display:none"><div class="grid-2cols"><div class="card"><div class="card-title">📝 Add Student</div><div id="studentFormMessage" class="success-msg"></div><div class="form-group"><label>Student Name *</label><input type="text" id="studentName" placeholder="e.g., Emma Wong"></div><div class="form-group"><label>Select Family *</label><select id="studentGroup"><option value="">-- Select Family --</option></select></div><div class="form-group"><label>Rate Type *</label><div class="rate-group"><select id="rateType"><option value="hourly">💰 Per Hour</option><option value="session">📚 Per Session</option></select><input type="number" id="rateAmount" placeholder="Amount ($)" step="0.01"></div></div><button onclick="window.addStudent()" class="btn-primary" style="width:100%">✨ Add Student</button></div><div class="card"><div class="card-title">👨‍🎓 Student List</div><div id="studentList" class="student-list"><div style="text-align:center;padding:40px;color:#8892b0">Loading...</div></div></div></div></div>
+                <div id="lessonsView" style="display:none"><div class="grid-2cols"><div class="card"><div class="card-title">➕ Add Lesson</div><div id="lessonFormMessage" class="success-msg"></div><div class="form-group"><label>Select Student *</label><select id="lessonStudent"><option value="">-- Select Student --</option></select></div><div class="form-group"><label>Lesson Date & Time *</label><input type="datetime-local" id="lessonStart"><div class="auto-hint">⏱️ End time auto-sets to 1.5 hours later</div></div><div class="form-group"><label>End Time *</label><input type="datetime-local" id="lessonEnd"></div><div class="form-group"><label>Topic Covered</label><input type="text" id="lessonTopic" placeholder="e.g., Algebra"></div><div class="form-group"><label>Notes / Homework</label><textarea id="lessonNotes" rows="2" placeholder="Homework assigned"></textarea></div><button onclick="window.addLesson()" class="btn-primary" style="width:100%">✨ Add Lesson</button></div><div class="card"><div class="card-title">📋 Lesson History</div><div class="stats-bar"><div class="stat"><div class="stat-number" id="totalLessons">0</div><div class="stat-label">Total Lessons</div></div><div class="stat"><div class="stat-number" id="totalEarnings">$0</div><div class="stat-label">Total Earnings</div></div></div><div id="lessonList" class="lesson-list"><div style="text-align:center;padding:40px;color:#8892b0">Loading...</div></div></div></div></div>
+                <div id="paymentView" style="display:none"><div class="card"><div class="card-title">💰 Family Payment Status</div><div id="paymentFormMessage" class="success-msg"></div><div class="grid-2cols" style="margin-bottom:20px"><div class="form-group"><label>Select Family</label><select id="paymentGroupFilter" onchange="window.renderGroupPayment()"><option value="">-- Select Family --</option></select></div><div class="form-group"><label>Payment Status</label><select id="groupPaymentStatus"><option value="unpaid">⚠️ Unpaid</option><option value="paid">✅ Paid</option><option value="invoiced">📄 Invoiced</option></select></div></div><button onclick="window.updateGroupPaymentStatus()" class="btn-primary" style="width:100%;margin-bottom:20px">💾 Update Payment Status</button><div id="groupPaymentInfo" style="display:none"><div class="stats-bar"><div class="stat"><div class="stat-number" id="groupTotalLessons">0</div><div class="stat-label">Lessons</div></div><div class="stat"><div class="stat-number" id="groupTotalAmount">$0</div><div class="stat-label">Total Amount</div></div><div class="stat"><div class="stat-number" id="groupPaymentBadge"></div><div class="stat-label">Current Status</div></div></div></div><div id="groupPaymentList" class="lesson-list"><div style="text-align:center;padding:40px;color:#8892b0">Select a family to view payment status</div></div></div></div>
+                <div id="analysisView" style="display:none"><div class="card"><div class="card-title">📊 Fee Analysis & Payment Report</div><div id="analysisFormMessage" class="success-msg"></div><div class="grid-2cols" style="margin-bottom:20px"><div class="form-group"><label>From Date *</label><input type="date" id="analysisFromDate"></div><div class="form-group"><label>To Date *</label><input type="date" id="analysisToDate"></div></div><div class="button-group"><button onclick="window.generateAnalysis()" class="btn-primary" style="flex:1">📊 Generate Report</button><button id="shareAnalysisBtn" onclick="window.shareAnalysis()" class="btn-share" style="flex:1;display:none">📤 Share Report</button></div><div id="analysisPreview" style="display:none;margin-top:20px"></div></div></div>
+                <div id="invoiceView" style="display:none"><div class="card"><div class="card-title">🧾 Generate Invoice</div><div id="invoiceFormMessage" class="success-msg"></div><div class="grid-2cols" style="margin-bottom:20px"><div class="form-group"><label>Select Family *</label><select id="invoiceGroup"><option value="">-- Select Family --</option></select></div><div class="form-group"><label>From Date *</label><input type="date" id="invoiceFromDate"></div><div class="form-group"><label>To Date *</label><input type="date" id="invoiceToDate"></div></div><div class="button-group"><button onclick="window.generateInvoice()" class="btn-primary" style="flex:1">📄 Generate Invoice</button><button id="shareBtn" onclick="window.shareInvoice()" class="btn-share" style="flex:1;display:none">📤 Share Invoice</button></div><div id="invoicePreview" style="display:none;margin-top:20px"></div></div></div>
+                <div id="backupView" style="display:none"><div class="card"><div class="card-title">💾 Backup & Restore Data</div><div id="backupFormMessage" class="success-msg"></div><div class="backup-info"><strong>📊 Current Data Summary:</strong><br>Families: <span id="backupGroupCount">0</span><br>Students: <span id="backupStudentCount">0</span><br>Lessons: <span id="backupLessonCount">0</span></div><div class="success-box" style="margin-bottom:20px"><strong>💾 How to Backup:</strong><ul style="margin-top:10px;margin-left:20px"><li>Click <strong>"Export to File"</strong> to save your data as a JSON file</li><li>Save the file to your computer, iCloud Drive, Google Drive, or email it to yourself</li></ul></div><div class="success-box" style="margin-bottom:20px"><strong>🔄 How to Restore:</strong><ul style="margin-top:10px;margin-left:20px"><li>Click <strong>"Import from File"</strong> to select a previously saved backup file</li><li><strong>⚠️ Warning:</strong> This will replace ALL current data</li></ul></div><div class="button-group"><button onclick="window.exportToFile()" class="btn-backup" style="flex:1">📁 Export to File</button><button onclick="window.importFromFile()" class="btn-primary" style="flex:1">📂 Import from File</button></div></div></div>
 
-                <div class="instructions"><h3>ð How It Works</h3><div class="success-box"><strong>â Features:</strong><ul><li>âï¸ <strong>Cloud Sync</strong> - Your data is saved to Supabase and accessible anywhere</li><li>ð¥ <strong>Multi-User</strong> - Each user has their own private data</li><li>ð¾ <strong>Export to File</strong> - Save your data as a JSON backup file</li><li>ð <strong>Import from File</strong> - Restore data from a backup file</li><li>ð° <strong>Family Payment Status</strong> - Set status: Unpaid / Paid / Invoiced</li><li>ð <strong>Analysis Report</strong> - Includes payment history by family</li><li>ð§¾ <strong>Invoices</strong> - Generate shareable PDF invoices</li><li>ð <strong>Add to Calendar</strong> - Export lessons to Apple Calendar</li></ul></div></div>
+                <div class="instructions"><h3>📖 How It Works</h3><div class="success-box"><strong>✅ Features:</strong><ul><li>☁️ <strong>Cloud Sync</strong> - Your data is saved to Supabase and accessible anywhere</li><li>👥 <strong>Multi-User</strong> - Each user has their own private data</li><li>💾 <strong>Export to File</strong> - Save your data as a JSON backup file</li><li>📂 <strong>Import from File</strong> - Restore data from a backup file</li><li>💰 <strong>Family Payment Status</strong> - Set status: Unpaid / Paid / Invoiced</li><li>📊 <strong>Analysis Report</strong> - Includes payment history by family</li><li>🧾 <strong>Invoices</strong> - Generate shareable PDF invoices</li><li>📅 <strong>Add to Calendar</strong> - Export lessons to Apple Calendar</li></ul></div></div>
                 <div class="status-text">Last updated: <span id="timestamp">--</span></div>
             </div>
         </div>
     </div>
 
-    <!-- Modals -->
-    <div id="groupModal" class="modal"><div class="modal-content"><h3 id="groupModalTitle">Edit Family</h3><input type="hidden" id="editGroupId"><div class="form-group"><label>Family Name</label><input type="text" id="editGroupName"></div><div class="form-group"><label>Payment Status</label><select id="editGroupPaymentStatus"><option value="unpaid">â ï¸ Unpaid</option><option value="paid">â Paid</option><option value="invoiced">ð Invoiced</option></select></div><button onclick="saveGroupEdit()" class="btn-primary" style="width:100%">ð¾ Save Changes</button><button onclick="closeGroupModal()" style="width:100%;margin-top:10px">Cancel</button></div></div>
-    <div id="studentModal" class="modal"><div class="modal-content"><h3>Edit Student</h3><input type="hidden" id="editStudentId"><div class="form-group"><label>Student Name</label><input type="text" id="editStudentName"></div><div class="form-group"><label>Family</label><select id="editStudentGroup"></select></div><div class="form-group"><label>Rate Type</label><div class="rate-group"><select id="editRateType"><option value="hourly">ð° Per Hour</option><option value="session">ð Per Session</option></select><input type="number" id="editRateAmount" placeholder="Amount ($)" step="0.01"></div></div><button onclick="saveStudentEdit()" class="btn-primary" style="width:100%">ð¾ Save Changes</button><button onclick="closeStudentModal()" style="width:100%;margin-top:10px">Cancel</button></div></div>
+    <div id="groupModal" class="modal"><div class="modal-content"><h3 id="groupModalTitle">Edit Family</h3><input type="hidden" id="editGroupId"><div class="form-group"><label>Family Name</label><input type="text" id="editGroupName"></div><div class="form-group"><label>Payment Status</label><select id="editGroupPaymentStatus"><option value="unpaid">⚠️ Unpaid</option><option value="paid">✅ Paid</option><option value="invoiced">📄 Invoiced</option></select></div><button onclick="window.saveGroupEdit()" class="btn-primary" style="width:100%">💾 Save Changes</button><button onclick="window.closeGroupModal()" style="width:100%;margin-top:10px">Cancel</button></div></div>
+    <div id="studentModal" class="modal"><div class="modal-content"><h3>Edit Student</h3><input type="hidden" id="editStudentId"><div class="form-group"><label>Student Name</label><input type="text" id="editStudentName"></div><div class="form-group"><label>Family</label><select id="editStudentGroup"></select></div><div class="form-group"><label>Rate Type</label><div class="rate-group"><select id="editRateType"><option value="hourly">💰 Per Hour</option><option value="session">📚 Per Session</option></select><input type="number" id="editRateAmount" placeholder="Amount ($)" step="0.01"></div></div><button onclick="window.saveStudentEdit()" class="btn-primary" style="width:100%">💾 Save Changes</button><button onclick="window.closeStudentModal()" style="width:100%;margin-top:10px">Cancel</button></div></div>
 
     <script>
-        // ============ SUPABASE CONFIGURATION ============
-        // ð´ REPLACE WITH YOUR SUPABASE URL AND ANON KEY ð´
-        const SUPABASE_URL = 'https://trsfjyasjraeqhqoqpve.supabase.co';
-        const_ANONKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRyc2ZqeWFzanJhZXFocW9xcHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMzEwOTQsImV4cCI6MjA5NjYwNzA5NH0.HlU-oEu2cSW5DInTH_p0hNsPhcODDOgG_8lPMlU-1yM';
+        // 🔴 REPLACE WITH YOUR ACTUAL SUPABASE CREDENTIALS 🔴
+        const SUPABASE_URL = 'https://your-project.supabase.co';
+        const SUPABASE_ANON_KEY = 'your-anon-key';
         
-        let supabase;
+        let supabaseClient;
         let currentUser = null;
         let groups = [], students = [], lessons = [];
         let currentInvoiceElement = null, currentAnalysisElement = null;
@@ -202,7 +197,30 @@
         let currentCalendarMonth = new Date().getMonth();
         let copiedLesson = null;
 
-        // Helper functions
+        // Make functions global
+        window.handleLogin = handleLogin;
+        window.showSignup = showSignup;
+        window.handleLogout = handleLogout;
+        window.toggleTheme = toggleTheme;
+        window.addGroup = addGroup;
+        window.addStudent = addStudent;
+        window.addLesson = addLesson;
+        window.switchMode = switchMode;
+        window.openAddGroupModal = openAddGroupModal;
+        window.openAddStudentModal = openAddStudentModal;
+        window.saveGroupEdit = saveGroupEdit;
+        window.closeGroupModal = closeGroupModal;
+        window.saveStudentEdit = saveStudentEdit;
+        window.closeStudentModal = closeStudentModal;
+        window.renderGroupPayment = renderGroupPayment;
+        window.updateGroupPaymentStatus = updateGroupPaymentStatus;
+        window.generateAnalysis = generateAnalysis;
+        window.shareAnalysis = shareAnalysis;
+        window.generateInvoice = generateInvoice;
+        window.shareInvoice = shareInvoice;
+        window.exportToFile = exportToFile;
+        window.importFromFile = importFromFile;
+
         function parseLocalDateTime(dateStr) {
             if (!dateStr) return new Date();
             const [datePart, timePart] = dateStr.split(' ');
@@ -228,10 +246,9 @@
         function updateTimestamp() { const ts = document.getElementById('timestamp'); if (ts) ts.innerHTML = new Date().toLocaleTimeString(); }
         function toggleTheme() { document.body.classList.toggle('light'); }
         
-        // ============ AUTHENTICATION ============
         async function initSupabase() {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            const { data: { session } } = await supabase.auth.getSession();
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { data: { session } } = await supabaseClient.auth.getSession();
             if (session) {
                 currentUser = session.user;
                 document.getElementById('loginScreen').style.display = 'none';
@@ -251,7 +268,7 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const msgDiv = document.getElementById('loginMessage');
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
             if (error) {
                 msgDiv.textContent = error.message;
                 msgDiv.style.display = 'block';
@@ -270,7 +287,7 @@
             }
         }
         
-        function showSignup() {
+        async function showSignup() {
             const msgDiv = document.getElementById('loginMessage');
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
@@ -280,59 +297,43 @@
                 setTimeout(() => msgDiv.style.display = 'none', 3000);
                 return;
             }
-            supabase.auth.signUp({ email, password }).then(({ error }) => {
-                if (error) {
-                    msgDiv.textContent = error.message;
-                    msgDiv.style.display = 'block';
-                } else {
-                    msgDiv.textContent = 'Account created! Please check your email to confirm.';
-                    msgDiv.style.background = 'rgba(0,208,156,0.2)';
-                    msgDiv.style.color = '#00d09c';
-                    msgDiv.style.display = 'block';
-                    setTimeout(() => msgDiv.style.display = 'none', 5000);
-                }
-            });
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) {
+                msgDiv.textContent = error.message;
+                msgDiv.style.display = 'block';
+                msgDiv.style.background = 'rgba(255,77,109,0.2)';
+                msgDiv.style.color = '#ff4d6d';
+            } else {
+                msgDiv.textContent = 'Account created! You can now sign in.';
+                msgDiv.style.background = 'rgba(0,208,156,0.2)';
+                msgDiv.style.color = '#00d09c';
+                msgDiv.style.display = 'block';
+                setTimeout(() => msgDiv.style.display = 'none', 3000);
+            }
         }
         
         async function handleLogout() {
-            await supabase.auth.signOut();
+            await supabaseClient.auth.signOut();
             currentUser = null;
             groups = []; students = []; lessons = [];
             document.getElementById('loginScreen').style.display = 'block';
             document.getElementById('mainApp').style.display = 'none';
         }
         
-        // ============ DATA LOADING FROM SUPABASE ============
         async function loadAllData() {
             if (!currentUser) return;
-            const { data: groupsData } = await supabase.from('groups').select('*').eq('user_id', currentUser.id);
+            const { data: groupsData } = await supabaseClient.from('groups').select('*').eq('user_id', currentUser.id);
             if (groupsData) groups = groupsData;
-            const { data: studentsData } = await supabase.from('students').select('*').eq('user_id', currentUser.id);
+            const { data: studentsData } = await supabaseClient.from('students').select('*').eq('user_id', currentUser.id);
             if (studentsData) students = studentsData;
-            const { data: lessonsData } = await supabase.from('lessons').select('*').eq('user_id', currentUser.id);
+            const { data: lessonsData } = await supabaseClient.from('lessons').select('*').eq('user_id', currentUser.id);
             if (lessonsData) lessons = lessonsData;
         }
         
-        async function saveGroups() {
-            if (!currentUser) return;
-            for (const group of groups) {
-                await supabase.from('groups').upsert({ ...group, user_id: currentUser.id });
-            }
-        }
-        async function saveStudents() {
-            if (!currentUser) return;
-            for (const student of students) {
-                await supabase.from('students').upsert({ ...student, user_id: currentUser.id });
-            }
-        }
-        async function saveLessons() {
-            if (!currentUser) return;
-            for (const lesson of lessons) {
-                await supabase.from('lessons').upsert({ ...lesson, user_id: currentUser.id });
-            }
-        }
+        async function saveGroups() { if (!currentUser) return; for (const group of groups) { await supabaseClient.from('groups').upsert({ ...group, user_id: currentUser.id }); } }
+        async function saveStudents() { if (!currentUser) return; for (const student of students) { await supabaseClient.from('students').upsert({ ...student, user_id: currentUser.id }); } }
+        async function saveLessons() { if (!currentUser) return; for (const lesson of lessons) { await supabaseClient.from('lessons').upsert({ ...lesson, user_id: currentUser.id }); } }
         
-        // ============ RENDER FUNCTIONS (using Supabase data) ============
         function updateSelectors() {
             ['studentGroup', 'invoiceGroup', 'editStudentGroup', 'paymentGroupFilter'].forEach(id => {
                 const sel = document.getElementById(id);
@@ -364,47 +365,130 @@
             updateSelectors();
             document.getElementById('groupName').value = '';
             updateBackupStats();
-            showMessage(`â Family "${n}" created!`, 'success', 'groupFormMessage');
+            showMessage(`✅ Family "${n}" created!`, 'success', 'groupFormMessage');
         }
         
         function renderGroups() {
             const c = document.getElementById('groupList');
             if (!c) return;
-            if (groups.length === 0) { c.innerHTML = '<div style="text-align:center;padding:40px;color:#8892b0">ð¥ No families yet. Create one!</div>'; return; }
+            if (groups.length === 0) { c.innerHTML = '<div style="text-align:center;padding:40px;color:#8892b0">👥 No families yet. Create one!</div>'; return; }
             const studentCount = (gid) => students.filter(s => s.groupId === gid).length;
             const lessonCount = (gid) => lessons.filter(l => l.groupId === gid).length;
             const groupTotal = (gid) => lessons.filter(l => l.groupId === gid).reduce((s, l) => s + l.earnings, 0);
             c.innerHTML = groups.map(g => {
                 const cls = g.paymentStatus === 'paid' ? 'status-paid' : (g.paymentStatus === 'invoiced' ? 'status-invoiced' : 'status-unpaid');
-                const txt = g.paymentStatus === 'paid' ? 'â Paid' : (g.paymentStatus === 'invoiced' ? 'ð Invoiced' : 'â ï¸ Unpaid');
-                return `<div class="group-item"><div class="group-info"><div class="group-name">${escapeHtml(g.name)}</div><div class="group-details">ð¨âð ${studentCount(g.id)} students | ð ${lessonCount(g.id)} lessons | ð° $${groupTotal(g.id).toFixed(2)}</div><div class="group-details"><span class="payment-status-badge ${cls}">${txt}</span></div></div><div><button class="edit-btn" onclick='openEditGroup(${JSON.stringify(g)})'>âï¸ Edit</button><button class="delete-btn" onclick="deleteGroup('${g.id}','${escapeHtml(g.name).replace(/'/g, "\\'")}')">ðï¸ Delete</button></div></div>`;
+                const txt = g.paymentStatus === 'paid' ? '✅ Paid' : (g.paymentStatus === 'invoiced' ? '📄 Invoiced' : '⚠️ Unpaid');
+                return `<div class="group-item"><div class="group-info"><div class="group-name">${escapeHtml(g.name)}</div><div class="group-details">👨‍🎓 ${studentCount(g.id)} students | 📚 ${lessonCount(g.id)} lessons | 💰 $${groupTotal(g.id).toFixed(2)}</div><div class="group-details"><span class="payment-status-badge ${cls}">${txt}</span></div></div><div><button class="edit-btn" onclick='window.openEditGroup(${JSON.stringify(g)})'>✏️ Edit</button><button class="delete-btn" onclick="window.deleteGroup('${g.id}','${escapeHtml(g.name).replace(/'/g, "\\'")}')">🗑️ Delete</button></div></div>`;
             }).join('');
         }
         
-        async function deleteGroup(id, name) {
-            if (confirm(`Delete family "${name}"?`)) {
-                groups = groups.filter(g => g.id !== id);
-                await saveGroups();
-                renderGroups();
-                updateSelectors();
-                updateBackupStats();
-                showMessage('Family deleted', 'success', 'groupFormMessage');
-            }
+        window.openEditGroup = function(g) { 
+            document.getElementById('editGroupId').value = g.id; 
+            document.getElementById('editGroupName').value = g.name; 
+            document.getElementById('editGroupPaymentStatus').value = g.paymentStatus || 'unpaid'; 
+            document.getElementById('groupModal').style.display = 'flex'; 
+        };
+        
+        window.deleteGroup = async function(id, name) { 
+            if (confirm(`Delete family "${name}"?`)) { 
+                groups = groups.filter(g => g.id !== id); 
+                await saveGroups(); 
+                renderGroups(); 
+                updateSelectors(); 
+                updateBackupStats(); 
+                showMessage('Family deleted', 'success', 'groupFormMessage'); 
+            } 
+        };
+        
+        function saveGroupEdit() { 
+            const id = document.getElementById('editGroupId').value; 
+            const idx = groups.findIndex(g => g.id === id); 
+            if (idx !== -1) { 
+                groups[idx].name = document.getElementById('editGroupName').value.trim(); 
+                groups[idx].paymentStatus = document.getElementById('editGroupPaymentStatus').value; 
+                saveGroups(); 
+                renderGroups(); 
+                updateSelectors(); 
+                closeGroupModal(); 
+                updateBackupStats(); 
+                showMessage('Family updated', 'success', 'groupFormMessage'); 
+            } 
         }
         
-        function openEditGroup(g) { document.getElementById('editGroupId').value = g.id; document.getElementById('editGroupName').value = g.name; document.getElementById('editGroupPaymentStatus').value = g.paymentStatus || 'unpaid'; document.getElementById('groupModal').style.display = 'flex'; }
-        async function saveGroupEdit() { const id = document.getElementById('editGroupId').value; const idx = groups.findIndex(g => g.id === id); if (idx !== -1) { groups[idx].name = document.getElementById('editGroupName').value.trim(); groups[idx].paymentStatus = document.getElementById('editGroupPaymentStatus').value; await saveGroups(); renderGroups(); updateSelectors(); closeGroupModal(); updateBackupStats(); showMessage('Family updated', 'success', 'groupFormMessage'); } }
         function closeGroupModal() { document.getElementById('groupModal').style.display = 'none'; }
         
-        async function addStudent() { const n = document.getElementById('studentName').value.trim(); const gid = document.getElementById('studentGroup').value; const rt = document.getElementById('rateType').value; const amt = parseFloat(document.getElementById('rateAmount').value); if (!n || !gid || isNaN(amt) || amt <= 0) { showMessage('Enter valid student info', 'error', 'studentFormMessage'); return; } const newStudent = { id: Date.now().toString(), name: n, groupId: gid, rateType: rt, rateAmount: amt, user_id: currentUser.id }; students.push(newStudent); await saveStudents(); renderStudents(); updateSelectors(); document.getElementById('studentName').value = ''; document.getElementById('rateAmount').value = ''; updateBackupStats(); showMessage(`â Student "${n}" added!`, 'success', 'studentFormMessage'); }
+        async function addStudent() { 
+            const n = document.getElementById('studentName').value.trim(); 
+            const gid = document.getElementById('studentGroup').value; 
+            const rt = document.getElementById('rateType').value; 
+            const amt = parseFloat(document.getElementById('rateAmount').value); 
+            if (!n || !gid || isNaN(amt) || amt <= 0) { showMessage('Enter valid student info', 'error', 'studentFormMessage'); return; } 
+            const newStudent = { id: Date.now().toString(), name: n, groupId: gid, rateType: rt, rateAmount: amt, user_id: currentUser.id }; 
+            students.push(newStudent); 
+            await saveStudents(); 
+            renderStudents(); 
+            updateSelectors(); 
+            document.getElementById('studentName').value = ''; 
+            document.getElementById('rateAmount').value = ''; 
+            updateBackupStats(); 
+            showMessage(`✅ Student "${n}" added!`, 'success', 'studentFormMessage'); 
+        }
         
-        function renderStudents() { const c = document.getElementById('studentList'); if (!c) return; if (students.length === 0) { c.innerHTML = '<div style="text-align:center;padding:40px;color:#8892b0">ð¨âð No students yet. Add one!</div>'; return; } c.innerHTML = students.map(s => { const g = groups.find(g => g.id === s.groupId); const rate = s.rateType === 'hourly' ? `$${s.rateAmount}/hour` : `$${s.rateAmount}/session`; return `<div class="student-item"><div class="student-info"><div class="student-name">${escapeHtml(s.name)}</div><div class="student-rate">ð¥ ${g?.name || 'No Family'} | ð° ${rate}</div><div class="student-rate">ð ${lessons.filter(l => l.studentId === s.id).length} lessons</div></div><div><button class="edit-btn" onclick='openEditStudent(${JSON.stringify(s)})'>âï¸ Edit</button><button class="delete-btn" onclick="deleteStudent('${s.id}','${escapeHtml(s.name).replace(/'/g, "\\'")}')">ðï¸ Delete</button></div></div>`; }).join(''); }
+        function renderStudents() { 
+            const c = document.getElementById('studentList'); 
+            if (!c) return; 
+            if (students.length === 0) { c.innerHTML = '<div style="text-align:center;padding:40px;color:#8892b0">👨‍🎓 No students yet. Add one!</div>'; return; } 
+            c.innerHTML = students.map(s => { 
+                const g = groups.find(g => g.id === s.groupId); 
+                const rate = s.rateType === 'hourly' ? `$${s.rateAmount}/hour` : `$${s.rateAmount}/session`; 
+                return `<div class="student-item"><div class="student-info"><div class="student-name">${escapeHtml(s.name)}</div><div class="student-rate">👥 ${g?.name || 'No Family'} | 💰 ${rate}</div><div class="student-rate">📚 ${lessons.filter(l => l.studentId === s.id).length} lessons</div></div><div><button class="edit-btn" onclick='window.openEditStudent(${JSON.stringify(s)})'>✏️ Edit</button><button class="delete-btn" onclick="window.deleteStudent('${s.id}','${escapeHtml(s.name).replace(/'/g, "\\'")}')">🗑️ Delete</button></div></div>`; 
+            }).join(''); 
+        }
         
-        async function deleteStudent(id, name) { if (confirm(`Delete student "${name}"? Their lessons will also be deleted.`)) { students = students.filter(s => s.id !== id); lessons = lessons.filter(l => l.studentId !== id); await saveStudents(); await saveLessons(); renderStudents(); renderCalendar(); updateSelectors(); updateLessonStats(); updateCalendarStats(); updateBackupStats(); showMessage('Student deleted', 'success', 'studentFormMessage'); } }
+        window.openEditStudent = function(s) { 
+            document.getElementById('editStudentId').value = s.id; 
+            document.getElementById('editStudentName').value = s.name; 
+            document.getElementById('editRateType').value = s.rateType; 
+            document.getElementById('editRateAmount').value = s.rateAmount; 
+            const grpSel = document.getElementById('editStudentGroup'); 
+            grpSel.innerHTML = '<option value="">-- Select Family --</option>'; 
+            groups.forEach(g => { grpSel.innerHTML += `<option value="${g.id}" ${g.id === s.groupId ? 'selected' : ''}>${g.name}</option>`; }); 
+            document.getElementById('studentModal').style.display = 'flex'; 
+        };
         
-        function openEditStudent(s) { document.getElementById('editStudentId').value = s.id; document.getElementById('editStudentName').value = s.name; document.getElementById('editRateType').value = s.rateType; document.getElementById('editRateAmount').value = s.rateAmount; const grpSel = document.getElementById('editStudentGroup'); grpSel.innerHTML = '<option value="">-- Select Family --</option>'; groups.forEach(g => { grpSel.innerHTML += `<option value="${g.id}" ${g.id === s.groupId ? 'selected' : ''}>${g.name}</option>`; }); document.getElementById('studentModal').style.display = 'flex'; }
+        window.deleteStudent = async function(id, name) { 
+            if (confirm(`Delete student "${name}"? Their lessons will also be deleted.`)) { 
+                students = students.filter(s => s.id !== id); 
+                lessons = lessons.filter(l => l.studentId !== id); 
+                await saveStudents(); 
+                await saveLessons(); 
+                renderStudents(); 
+                renderCalendar(); 
+                updateSelectors(); 
+                updateLessonStats(); 
+                updateBackupStats(); 
+                showMessage('Student deleted', 'success', 'studentFormMessage'); 
+            } 
+        };
         
-        async function saveStudentEdit() { const id = document.getElementById('editStudentId').value; const idx = students.findIndex(s => s.id === id); if (idx !== -1) { students[idx] = { ...students[idx], name: document.getElementById('editStudentName').value.trim(), groupId: document.getElementById('editStudentGroup').value, rateType: document.getElementById('editRateType').value, rateAmount: parseFloat(document.getElementById('editRateAmount').value) }; await saveStudents(); for (let l of lessons) { if (l.studentId === id) { l.earnings = calculateEarnings(students[idx], l.startTime, l.endTime); } } await saveLessons(); renderStudents(); renderCalendar(); updateLessonStats(); updateCalendarStats(); updateBackupStats(); updateSelectors(); closeStudentModal(); showMessage('Student updated', 'success', 'studentFormMessage'); } }
+        function saveStudentEdit() { 
+            const id = document.getElementById('editStudentId').value; 
+            const idx = students.findIndex(s => s.id === id); 
+            if (idx !== -1) { 
+                students[idx] = { ...students[idx], name: document.getElementById('editStudentName').value.trim(), groupId: document.getElementById('editStudentGroup').value, rateType: document.getElementById('editRateType').value, rateAmount: parseFloat(document.getElementById('editRateAmount').value) }; 
+                saveStudents(); 
+                for (let l of lessons) { if (l.studentId === id) { l.earnings = calculateEarnings(students[idx], l.startTime, l.endTime); } } 
+                saveLessons(); 
+                renderStudents(); 
+                renderCalendar(); 
+                updateLessonStats(); 
+                updateBackupStats(); 
+                updateSelectors(); 
+                closeStudentModal(); 
+                showMessage('Student updated', 'success', 'studentFormMessage'); 
+            } 
+        }
+        
         function closeStudentModal() { document.getElementById('studentModal').style.display = 'none'; }
         
         async function addLesson() { 
@@ -428,39 +512,125 @@
             await saveLessons();
             renderCalendar();
             updateLessonStats();
-            updateCalendarStats();
             updateBackupStats();
             document.getElementById('lessonTopic').value = '';
             document.getElementById('lessonNotes').value = '';
-            showMessage(`â Lesson added for ${student.name} - ${hours.toFixed(1)} hrs = $${earnings.toFixed(2)}`, 'success', 'lessonFormMessage');
+            showMessage(`✅ Lesson added for ${student.name} - ${hours.toFixed(1)} hrs = $${earnings.toFixed(2)}`, 'success', 'lessonFormMessage');
             const now = new Date(); now.setHours(now.getHours() + 1); now.setMinutes(0);
             document.getElementById('lessonStart').value = getDateTimeLocal(now);
             document.getElementById('lessonStart').dispatchEvent(new Event('change'));
         }
         
-        // Simplified versions of other functions (analysis, invoice, calendar sync) for brevity
-        function renderCalendar() { const container = document.getElementById('calendarViewContainer'); if (container) container.innerHTML = '<div class="calendar-container">Calendar view - Loaded</div>'; }
-        function updateLessonStats() { document.getElementById('totalLessons').innerHTML = lessons.length; document.getElementById('totalEarnings').innerHTML = `$${lessons.reduce((s,l)=>s+l.earnings,0).toFixed(2)}`; }
-        function updateCalendarStats() { }
-        function updateBackupStats() { document.getElementById('backupGroupCount').innerHTML = groups.length; document.getElementById('backupStudentCount').innerHTML = students.length; document.getElementById('backupLessonCount').innerHTML = lessons.length; }
-        function renderAll() { renderGroups(); renderStudents(); renderCalendar(); updateLessonStats(); updateCalendarStats(); updateBackupStats(); updateSelectors(); }
+        function renderCalendar() { 
+            const container = document.getElementById('calendarViewContainer'); 
+            if (container) container.innerHTML = '<div class="calendar-container">Calendar view - Ready</div>'; 
+        }
+        
+        function updateLessonStats() { 
+            document.getElementById('totalLessons').innerHTML = lessons.length; 
+            document.getElementById('totalEarnings').innerHTML = `$${lessons.reduce((s,l)=>s+l.earnings,0).toFixed(2)}`; 
+        }
+        
+        function updateBackupStats() { 
+            document.getElementById('backupGroupCount').innerHTML = groups.length; 
+            document.getElementById('backupStudentCount').innerHTML = students.length; 
+            document.getElementById('backupLessonCount').innerHTML = lessons.length; 
+        }
+        
+        function renderAll() { 
+            renderGroups(); 
+            renderStudents(); 
+            renderCalendar(); 
+            updateLessonStats(); 
+            updateBackupStats(); 
+            updateSelectors(); 
+        }
+        
         function setDefaultDates() { }
-        function setupAutoEndTime() { const s = document.getElementById('lessonStart'), e = document.getElementById('lessonEnd'); if (s && e) { s.addEventListener('change', () => { if (s.value) { const d = new Date(s.value); const ed = new Date(d.getTime() + 90 * 60 * 1000); e.value = getDateTimeLocal(ed); } }); } }
-        function switchMode(mode) { /* simplified */ }
-        function openAddGroupModal() { document.getElementById('editGroupId').value = ''; document.getElementById('editGroupName').value = ''; document.getElementById('editGroupPaymentStatus').value = 'unpaid'; document.getElementById('groupModalTitle').innerText = 'Add New Family'; document.getElementById('groupModal').style.display = 'flex'; const btn = document.querySelector('#groupModal .btn-primary'); btn.innerText = 'â Add Family'; btn.setAttribute('onclick', 'saveNewGroup()'); }
-        function saveNewGroup() { const name = document.getElementById('editGroupName').value.trim(); const status = document.getElementById('editGroupPaymentStatus').value; if (!name) { alert('Enter family name'); return; } groups.push({ id: Date.now().toString(), name: name, paymentStatus: status }); saveGroups(); renderGroups(); updateSelectors(); closeGroupModal(); updateBackupStats(); showMessage(`Family "${name}" created`, 'success', 'groupFormMessage'); }
-        function openAddStudentModal() { document.getElementById('editStudentId').value = ''; document.getElementById('editStudentName').value = ''; document.getElementById('editRateType').value = 'hourly'; document.getElementById('editRateAmount').value = ''; const sel = document.getElementById('editStudentGroup'); sel.innerHTML = '<option value="">-- Select Family --</option>'; groups.forEach(g => { sel.innerHTML += `<option value="${g.id}">${g.name}</option>`; }); document.getElementById('studentModal').style.display = 'flex'; const btn = document.querySelector('#studentModal .btn-primary'); btn.innerText = 'â Add Student'; btn.setAttribute('onclick', 'saveNewStudent()'); }
-        function saveNewStudent() { const name = document.getElementById('editStudentName').value.trim(); const gid = document.getElementById('editStudentGroup').value; const rt = document.getElementById('editRateType').value; const amt = parseFloat(document.getElementById('editRateAmount').value); if (!name || !gid || isNaN(amt) || amt <= 0) { alert('Enter valid student info'); return; } students.push({ id: Date.now().toString(), name: name, groupId: gid, rateType: rt, rateAmount: amt }); saveStudents(); renderStudents(); updateSelectors(); closeStudentModal(); updateBackupStats(); showMessage(`Student "${name}" added`, 'success', 'studentFormMessage'); }
+        function setupAutoEndTime() { 
+            const s = document.getElementById('lessonStart'), e = document.getElementById('lessonEnd'); 
+            if (s && e) { 
+                s.addEventListener('change', () => { 
+                    if (s.value) { 
+                        const d = new Date(s.value); 
+                        const ed = new Date(d.getTime() + 90 * 60 * 1000); 
+                        e.value = getDateTimeLocal(ed); 
+                    } 
+                }); 
+            } 
+        }
+        
+        function switchMode(mode) { 
+            const views = ['groupsView', 'studentsView', 'lessonsView', 'paymentView', 'analysisView', 'invoiceView', 'backupView'];
+            views.forEach(view => {
+                const el = document.getElementById(view);
+                if (el) el.style.display = 'none';
+            });
+            const activeView = document.getElementById(mode + 'View');
+            if (activeView) activeView.style.display = 'block';
+        }
+        
+        function openAddGroupModal() { 
+            document.getElementById('editGroupId').value = ''; 
+            document.getElementById('editGroupName').value = ''; 
+            document.getElementById('editGroupPaymentStatus').value = 'unpaid'; 
+            document.getElementById('groupModalTitle').innerText = 'Add New Family'; 
+            document.getElementById('groupModal').style.display = 'flex'; 
+            const btn = document.querySelector('#groupModal .btn-primary'); 
+            btn.innerText = '➕ Add Family'; 
+            btn.setAttribute('onclick', 'window.saveNewGroup()'); 
+        }
+        
+        window.saveNewGroup = function() { 
+            const name = document.getElementById('editGroupName').value.trim(); 
+            const status = document.getElementById('editGroupPaymentStatus').value; 
+            if (!name) { alert('Enter family name'); return; } 
+            groups.push({ id: Date.now().toString(), name: name, paymentStatus: status }); 
+            saveGroups(); 
+            renderGroups(); 
+            updateSelectors(); 
+            closeGroupModal(); 
+            updateBackupStats(); 
+            showMessage(`Family "${name}" created`, 'success', 'groupFormMessage'); 
+        };
+        
+        function openAddStudentModal() { 
+            document.getElementById('editStudentId').value = ''; 
+            document.getElementById('editStudentName').value = ''; 
+            document.getElementById('editRateType').value = 'hourly'; 
+            document.getElementById('editRateAmount').value = ''; 
+            const sel = document.getElementById('editStudentGroup'); 
+            sel.innerHTML = '<option value="">-- Select Family --</option>'; 
+            groups.forEach(g => { sel.innerHTML += `<option value="${g.id}">${g.name}</option>`; }); 
+            document.getElementById('studentModal').style.display = 'flex'; 
+            const btn = document.querySelector('#studentModal .btn-primary'); 
+            btn.innerText = '➕ Add Student'; 
+            btn.setAttribute('onclick', 'window.saveNewStudent()'); 
+        }
+        
+        window.saveNewStudent = function() { 
+            const name = document.getElementById('editStudentName').value.trim(); 
+            const gid = document.getElementById('editStudentGroup').value; 
+            const rt = document.getElementById('editRateType').value; 
+            const amt = parseFloat(document.getElementById('editRateAmount').value); 
+            if (!name || !gid || isNaN(amt) || amt <= 0) { alert('Enter valid student info'); return; } 
+            students.push({ id: Date.now().toString(), name: name, groupId: gid, rateType: rt, rateAmount: amt }); 
+            saveStudents(); 
+            renderStudents(); 
+            updateSelectors(); 
+            closeStudentModal(); 
+            updateBackupStats(); 
+            showMessage(`Student "${name}" added`, 'success', 'studentFormMessage'); 
+        };
         
         function generateAnalysis() { showMessage('Analysis report generated', 'success', 'analysisFormMessage'); }
         function shareAnalysis() { showMessage('Report shared', 'success', 'analysisFormMessage'); }
         function generateInvoice() { showMessage('Invoice generated', 'success', 'invoiceFormMessage'); }
         function shareInvoice() { showMessage('Invoice shared', 'success', 'invoiceFormMessage'); }
-        function syncToCalendar() { showMessage('Calendar sync feature - would open Calendar app', 'success', 'calendarFormMessage'); }
-        function exportToFile() { showMessage('Export to file - would download JSON', 'success', 'backupFormMessage'); }
-        function importFromFile() { showMessage('Import from file - would restore data', 'success', 'backupFormMessage'); }
         function renderGroupPayment() { }
         function updateGroupPaymentStatus() { }
+        function exportToFile() { showMessage('Export to file - would download JSON', 'success', 'backupFormMessage'); }
+        function importFromFile() { showMessage('Import from file - would restore data', 'success', 'backupFormMessage'); }
         
         initSupabase();
     </script>
