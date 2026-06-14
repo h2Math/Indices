@@ -563,83 +563,105 @@
         }
         
         // CALENDAR VIEW - FIXED
-        function renderCalendar() {
-            const container = document.getElementById('calendarViewContainer');
-            if (!container) return;
-            
-            if (!lessons || lessons.length === 0) {
-                container.innerHTML = '<div class="calendar-container" style="text-align:center;padding:40px;color:#8892b0">📅 No lessons yet. Add your first lesson above!</div>';
-                return;
+       function renderCalendar() {
+    const container = document.getElementById('calendarViewContainer');
+    if (!container) return;
+    
+    // Check if there are any lessons
+    if (!lessons || lessons.length === 0) {
+        container.innerHTML = '<div class="calendar-container" style="text-align:center;padding:40px;color:#8892b0">📅 No lessons yet. Add your first lesson above!</div>';
+        return;
+    }
+    
+    // Get current month/year
+    const firstDayOfMonth = new Date(currentCalendarYear, currentCalendarMonth, 1);
+    const lastDayOfMonth = new Date(currentCalendarYear, currentCalendarMonth + 1, 0);
+    const startDay = firstDayOfMonth.getDay();
+    const daysInMonth = lastDayOfMonth.getDate();
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    let calendarHTML = `
+        <div class="calendar-container">
+            <div class="calendar-header-nav">
+                <button class="calendar-nav-btn" onclick="changeMonth(-1)">◀ Previous</button>
+                <div class="calendar-title">${monthNames[currentCalendarMonth]} ${currentCalendarYear}</div>
+                <button class="calendar-nav-btn" onclick="changeMonth(1)">Next ▶</button>
+            </div>
+            <div class="calendar-weekdays">
+                <div class="calendar-weekday">Sun</div><div class="calendar-weekday">Mon</div><div class="calendar-weekday">Tue</div>
+                <div class="calendar-weekday">Wed</div><div class="calendar-weekday">Thu</div><div class="calendar-weekday">Fri</div>
+                <div class="calendar-weekday">Sat</div>
+            </div>
+            <div class="calendar-days">
+    `;
+    
+    // Empty cells for days before month starts
+    for (let i = 0; i < startDay; i++) {
+        calendarHTML += `<div class="calendar-day empty"></div>`;
+    }
+    
+    // Days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+        // Find lessons for this specific day
+        const dayLessons = lessons.filter(l => {
+            if (!l.start) return false;
+            // Parse the date correctly (format: "2024-06-14 01:00:00")
+            let lessonDate;
+            if (l.start.includes('T')) {
+                lessonDate = new Date(l.start);
+            } else {
+                lessonDate = new Date(l.start.replace(' ', 'T'));
             }
-            
-            const firstDayOfMonth = new Date(currentCalendarYear, currentCalendarMonth, 1);
-            const lastDayOfMonth = new Date(currentCalendarYear, currentCalendarMonth + 1, 0);
-            const startDay = firstDayOfMonth.getDay();
-            const daysInMonth = lastDayOfMonth.getDate();
-            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            
-            let calendarHTML = `
-                <div class="calendar-container">
-                    <div class="calendar-header-nav">
-                        <button class="calendar-nav-btn" onclick="changeMonth(-1)">◀ Previous</button>
-                        <div class="calendar-title">${monthNames[currentCalendarMonth]} ${currentCalendarYear}</div>
-                        <button class="calendar-nav-btn" onclick="changeMonth(1)">Next ▶</button>
-                    </div>
-                    <div class="calendar-weekdays">
-                        <div class="calendar-weekday">Sun</div><div class="calendar-weekday">Mon</div><div class="calendar-weekday">Tue</div>
-                        <div class="calendar-weekday">Wed</div><div class="calendar-weekday">Thu</div><div class="calendar-weekday">Fri</div>
-                        <div class="calendar-weekday">Sat</div>
-                    </div>
-                    <div class="calendar-days">
-            `;
-            
-            for (let i = 0; i < startDay; i++) {
-                calendarHTML += `<div class="calendar-day empty"></div>`;
-            }
-            
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayLessons = lessons.filter(l => {
-                    if (!l.start) return false;
-                    const lessonDate = new Date(l.start);
-                    return !isNaN(lessonDate.getTime()) && 
-                           lessonDate.getFullYear() === currentCalendarYear && 
-                           lessonDate.getMonth() === currentCalendarMonth && 
-                           lessonDate.getDate() === day;
-                });
-                dayLessons.sort((a, b) => new Date(a.start) - new Date(b.start));
-                
-                calendarHTML += `<div class="calendar-day" data-day="${day}">
-                    <div class="day-number">${day}</div>`;
-                
-                for (const lesson of dayLessons) {
-                    const lessonDate = new Date(lesson.start);
-                    const timeStr = lessonDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    calendarHTML += `
-                        <div class="calendar-lesson" onclick="editLessonFromCalendar('${lesson.id}', event)">
-                            <span class="lesson-time">${timeStr}</span>
-                            <span class="lesson-student"> ${escapeHtml(lesson.studentName)}</span>
-                            <div style="font-size:0.6rem; color:#8892b0;">$${lesson.earnings?.toFixed(2) || '0.00'}</div>
-                        </div>
-                    `;
-                }
-                calendarHTML += `</div>`;
-            }
-            
-            const totalCells = startDay + daysInMonth;
-            const remainingCells = 42 - totalCells;
-            for (let i = 0; i < remainingCells; i++) {
-                calendarHTML += `<div class="calendar-day empty"></div>`;
-            }
+            return !isNaN(lessonDate.getTime()) && 
+                   lessonDate.getFullYear() === currentCalendarYear && 
+                   lessonDate.getMonth() === currentCalendarMonth && 
+                   lessonDate.getDate() === day;
+        });
+        
+        // Sort lessons by time
+        dayLessons.sort((a, b) => {
+            let dateA = a.start.includes('T') ? new Date(a.start) : new Date(a.start.replace(' ', 'T'));
+            let dateB = b.start.includes('T') ? new Date(b.start) : new Date(b.start.replace(' ', 'T'));
+            return dateA - dateB;
+        });
+        
+        calendarHTML += `<div class="calendar-day" data-day="${day}">
+            <div class="day-number">${day}</div>`;
+        
+        for (const lesson of dayLessons) {
+            let lessonDate = lesson.start.includes('T') ? new Date(lesson.start) : new Date(lesson.start.replace(' ', 'T'));
+            let timeStr = lessonDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            let amount = lesson.earnings ? lesson.earnings.toFixed(2) : '0.00';
             
             calendarHTML += `
-                    </div>
-                    <div class="calendar-legend">
-                        <div class="legend-item"><div class="legend-color"></div><span>Click any lesson to edit notes</span></div>
-                    </div>
+                <div class="calendar-lesson" onclick="editLessonFromCalendar('${lesson.id}', event)">
+                    <span class="lesson-time">${timeStr}</span>
+                    <span class="lesson-student"> ${escapeHtml(lesson.studentName)}</span>
+                    <div style="font-size:0.6rem; color:#8892b0;">$${amount}</div>
                 </div>
             `;
-            container.innerHTML = calendarHTML;
         }
+        
+        calendarHTML += `</div>`;
+    }
+    
+    // Fill remaining cells to complete the grid
+    const totalCells = startDay + daysInMonth;
+    const remainingCells = 42 - totalCells;
+    for (let i = 0; i < remainingCells; i++) {
+        calendarHTML += `<div class="calendar-day empty"></div>`;
+    }
+    
+    calendarHTML += `
+            </div>
+            <div class="calendar-legend">
+                <div class="legend-item"><div class="legend-color"></div><span>Click any lesson to edit notes</span></div>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = calendarHTML;
+}
         
         function changeMonth(delta) {
             let newMonth = currentCalendarMonth + delta;
